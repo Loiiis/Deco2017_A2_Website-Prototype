@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bla-Bla Study Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- COOKIE CONSENT -->
+<div id="cookieBanner" class="cookie hidden">
+
+    <div class="cookie-card">
+
+    <button class="cookie-close"
+        onclick="cookieManager.dismiss()">
+        ✕
+    </button>
+
+        <div class="cookie-text">
+
+            <div class="cookie-title">
+                🍪 We value your privacy
+            </div>
+
+            <p>
+               We use essential and optional cookies
+to improve your experience, analyse traffic,
+and personalise content in accordance
+with GDPR and EU privacy regulations.
+            </p>
+
+        </div>
+
+        <div class="cookie-actions">
+
+    <button class="cookie-outline"
+        onclick="cookieManager.reject()">
+        Reject All
+    </button>
+
+    <button class="cookie-secondary"
+        onclick="cookieManager.dismiss()">
+        Only Necessary
+    </button>
+
+    <button class="primary-btn"
+        onclick="cookieManager.accept()">
+        Accept All
+    </button>
+
+</div>
+    </div>
+
+</div>
+
+<!-- AUTH PAGE -->
+<section id="authPage" class="auth-page">
+
+    <!-- LOGIN -->
+    <div id="loginBox" class="auth-card">
+
+        <h1>Bla-Bla Study Tracker</h1>
+        <p>Login to continue</p>
+
+        <input id="loginEmail" type="email" placeholder="Email">
+        <input id="loginPassword" type="password" placeholder="Password">
+
+        <button class="primary-btn" onclick="auth.login()">
+            Login
+        </button>
+
+        <p class="auth-switch">
+            New user?
+            <span onclick="auth.showRegister()">Create account</span>
+        </p>
+
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerBox" class="auth-card hidden">
+
+        <h1>Create Account</h1>
+
+        <input id="registerUsername" placeholder="Username">
+        <input id="registerEmail" type="email" placeholder="Email">
+        <input id="registerPassword" type="password" placeholder="Password">
+
+        <button class="primary-btn" onclick="auth.register()">
+            Register
+        </button>
+
+        <p class="auth-switch">
+            Already have an account?
+            <span onclick="auth.showLogin()">Login</span>
+        </p>
+
+    </div>
+
+</section>
+
+<div id="mainApp" class="container hidden">
+
+<!-- HEADER -->
+<header class="header">
+
+    <div class="left" onclick="ui.toggleDrawer()">☰</div>
+
+    <div class="title">Bla-Bla Study Tracker</div>
+
+    <div class="right">
+
+        <button class="nav-btn" onclick="router.go('home')">Home</button>
+
+        <button class="nav-btn" onclick="router.go('progress')">Progress</button>
+
+        <button class="icon-btn" onclick="ui.openSettings('setting')">Setting</button>
+
+    </div>
+
+</header>
+
+    <!-- HOME -->
+    <section id="homePage">
+
+        <div class="hero-card">
+            <div>
+                <h1 id="greeting">Good morning!</h1>
+                <p>Let's focus on today.</p>
+                <p id="dailyQuote" style="margin-top:10px;color:#666;"></p>
+            </div>
+            <div class="sun-icon">☀</div>
+        </div>
+
+        <!-- TASKS -->
+        <div class="task-header">
+            <h2>Today's Tasks</h2>
+            <button class="add-btn" onclick="ui.openModal()">+ Add Task</button>
+        </div>
+
+        <div id="taskList"></div>
+
+        <!-- PROGRESS -->
+        <div class="card">
+            <div class="progress-top">
+                <p>Progress Today</p>
+                <small id="progressText">0 / 0 completed</small>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+
+<div class="card calendar-card">
+
+    <div class="calendar-header">
+        <h2>Assignment Deadlines</h2>
+        <button onclick="ui.openDeadlineModal()">+ Add</button>
+    </div>
+
+    <p id="deadlineProgressText"></p>
+
+    <div id="deadlineList"></div>
+
+</div>
+
+        <!-- COMMUNITY -->
+
+        <section id="communitySection" class="community-section">
+
+            <div class="community-top">
+                <h2>Community</h2>
+                <span id="onlineCount">12 students online</span>
+            </div>
+
+<!-- CHECKIN -->
+        <div class="checkin-card">
+            <h2>Daily Check-in</h2>
+            <p class="checkin-subtitle">How are you feeling today?</p>
+
+            <div class="checkin-buttons">
+                <button onclick="app.selectMood(this)">😊 Focused</button>
+                <button onclick="app.selectMood(this)">😵 Distracted</button>
+                <button onclick="app.selectMood(this)">🌱 Small Steps</button>
+            </div>
+        </div>
+        
+
+            <div class="community-input">
+                <input id="communityInput" type="text" placeholder="Share something...">
+                <button onclick="app.postCommunityMessage()">Send</button>
+            </div>
+
+            <div id="communityFeed"></div>
+
+        </section>
+
+    </section>
+
+    <!-- PROGRESS PAGE -->
+    <section id="progressPage" class="hidden">
+
+        <div class="progress-header">
+    <button class="back-btn" onclick="router.go('home')">←</button>
+    <h2>Progress</h2>
+</div>
+
+        <div class="card progress-card">
+            <div>
+                <p>Tasks Completed</p>
+                <h1 id="bigProgressText">0 / 0</h1>
+            </div>
+
+            <div class="circle" id="circle">
+                <div class="circle-inner" id="circleText">0%</div>
+            </div>
+        </div>
+    </section>
+
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+
+        <div class="modal-top">
+            <h2>Add New Task</h2>
+            <button class="close-btn" onclick="ui.closeModal()">✕</button>
+        </div>
+
+        <input id="taskInput" placeholder="e.g. Read chapter 3">
+
+        <div class="modal-actions">
+            <button onclick="ui.closeModal()">Cancel</button>
+            <button class="primary-btn" onclick="app.addTask()">Add Task</button>
+        </div>
+
+    </div>
+</div>
+
+<div id="deadlineModal" class="modal hidden">
+    <div class="modal-content">
+
+        <h2>Add Deadline</h2>
+
+        <input id="deadlineTitle" placeholder="Assignment name">
+
+        <input id="deadlineDate" type="date">
+
+        <div class="modal-actions">
+            <button onclick="ui.closeDeadlineModal()">Cancel</button>
+            <button class="primary-btn" onclick="app.addDeadline()">Add</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- TIMER -->
+<div id="timerModal" class="modal hidden">
+    <div class="modal-content timer-modal">
+
+        <h2>Focus Timer</h2>
+
+        <div class="knob-wrapper" id="knob">
+
+            <svg class="ring" width="240" height="240">
+                <circle class="ring-bg" cx="120" cy="120" r="100"/>
+                <circle id="ringProgress" class="ring-progress"
+                        cx="120" cy="120" r="100"/>
+            </svg>
+
+            <div class="knob-thumb" id="knobThumb"></div>
+
+            <div class="center-text">
+                <div id="timerText">min</div>
+                <small id="sliderMinutes">min</small>
+            </div>
+
+        </div>
+
+        <div class="modal-actions">
+            <button onclick="app.pauseTimer()">Pause</button>
+            <button onclick="app.confirmTimer()">Start</button>
+            <button onclick="ui.closeTimerModal()">Close</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div id="countdownModal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Timer Running</h2>
+        <h1 id="countdownText">00:00</h1>
+        <button onclick="app.stopCountdown()">Exit</button>
+        <button id="pauseBtn" onclick="app.pauseTimer()">
+    Pause
+</button>
+    </div>
+</div>
+
+<!-- DRAWER -->
+<div id="drawerOverlay" class="drawer-overlay hidden" onclick="ui.closeDrawer()"></div>
+
+<aside id="drawer" class="drawer">
+
+    <div class="drawer-header">
+        <div class="drawer-avatar">👤</div>
+        <div>
+            <div id="userName">User Name</div>
+            <div style="font-size:12px;color:#777;">Student</div>
+        </div>
+    </div>
+
+    <div class="drawer-info">
+        <p><strong>ID:</strong> <span id="userId"></span></p>
+        <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    </div>
+
+   <button class="drawer-exit" onclick="auth.logout()">
+    Logout
+</button>
+
+</aside>
+
+<!-- SETTINGS DRAWER -->
+<div id="settingsOverlay" class="drawer-overlay hidden" onclick="ui.closeSettings()"></div>
+
+<aside id="settingsDrawer" class="drawer">
+
+    <div class="drawer-header">
+        <div class="drawer-avatar">⚙</div>
+        <div>
+            <div>Settings</div>
+            <div style="font-size:12px;color:#777;">Preferences</div>
+        </div>
+    </div>
+
+    <div class="setting-item">
+        <span>Screen Reader Assist</span>
+        <label class="switch">
+            <input type="checkbox" onchange="app.toggleSpeech(this.checked)">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="setting-item">
+        <span>Large Text Mode</span>
+        <label class="switch">
+            <input type="checkbox" onchange="app.toggleLargeText(this.checked)">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+<div class="setting-item">
+        <span>Dark Mode</span>
+        <label class="switch">
+            <input type="checkbox" onchange="app.toggleDarkMode(this.checked)">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+<div class="setting-item">
+    <span>Focus Mode</span>
+    <label class="switch">
+        <input type="checkbox" onchange="app.toggleFocusMode(this.checked)">
+        <span class="slider"></span>
+    </label>
+</div>
+
+</aside>
+
+<script src="app.js"></script>
+
+</body>
+</html>
